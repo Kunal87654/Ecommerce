@@ -39,3 +39,43 @@ exports.signup = (req, res) => {
         res.status(500).send("Unable to add the user " + err.message)
     }) 
 }
+
+
+exports.signin = (req, res) => {
+
+    User.findOne({
+        where: {
+            username: req.body.username
+        }
+    })
+    .then(user => {
+
+        if (!user) {
+            res.status(404).send({ message: "User not found"})
+        }
+
+        //vheck if the password is valid or not
+        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+
+        if(!passwordIsValid) {
+            return res.status(401).send({
+                messsage: "Invalid password"
+            })
+        }
+
+        //if both username and password are valid, create the token
+
+        var token = jwt.sign({id: user.id}, config.secret, {expiresIn: 86400})
+
+        res.status(200).send({
+
+            username: user.username,
+            accesstoken: token
+        })
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: err.message
+        })
+    })
+}
