@@ -1,3 +1,4 @@
+
 const express = require("express")
 const serverConfig = require('./configs/server.config')
 const bodyparser = require('body-parser')
@@ -5,12 +6,25 @@ const bodyparser = require('body-parser')
 //initialising express
 const app = express()
 
-//middlewear -> bodyparser
+//middleware -> bodyparser
+
+/**
+ * Using body parser middleware
+ * 
+ * Used for parsing the request
+ * Parsing the request of type json and convert to the object
+*/
 
 app.use(bodyparser.json())
 
+/**
+ * Initilising Database
+ */
+
 const db = require("./models")
 const Role = db.role;
+
+
 
 db.sequelize.sync()
 .then(() => {
@@ -34,6 +48,8 @@ function init() {
 require('./routes/category.routes')(app)
 require('./routes/product.routes')(app)
 require('./routes/auth.routes')(app)
-app.listen( serverConfig.PORT, () => {
-    console.log(`Application started : ${serverConfig.PORT}`)
+require('./routes/cart.routes')(app)
+
+app.listen( serverConfig.PORT , () => {
+    console.log(`Application started : ${serverConfig.PORT}` )
 })

@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken")
-const config = require("../configs/auth.config")
+const config = require("../configs/auth.config");
+const db = require("../models");
+const User = db.user;
 
 verifyToken = (req, res, next) => {
 
@@ -19,13 +21,40 @@ verifyToken = (req, res, next) => {
                 message: "Unauthorised!"
             });
         }
+
+        req.userId = decoded.id;
         next()
     }) 
 
 }
 
+
+const isAdmin = (req, res, next) => {
+
+    User.findByPk(req.userId)
+    .then(user => {
+        user.getRoles()
+        .then(roles => {
+
+            for(let i = 0; i< roles.length; i++) {
+                if(roles[i].name === "admin") {
+                    next();
+                    return;
+                }
+            }
+
+            res.status(403).send({
+                message: "Required admin role"
+            })
+
+            return;
+        })
+    })
+}
+
 const authjwt = {
-    verifyToken: verifyToken
+    verifyToken: verifyToken,
+    isAdmin: isAdmin
 }
 
 module.exports = authjwt
