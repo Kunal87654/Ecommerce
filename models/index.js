@@ -1,6 +1,6 @@
 
 const config = require("../configs/db.config")
-const Sequelize = require("sequelize")
+const {Sequelize} = require("sequelize")
 
 const seq = new Sequelize(
     config.DB,
@@ -52,4 +52,4 @@ db.cart.belongsToMany(db.product, {
 db.user.hasMany(db.cart) 
 
 db.category.hasMany(db.product)
-module.exports = db                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+module.exports = db                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
