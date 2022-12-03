@@ -30,7 +30,8 @@ describe("Calculator tests", () => {
         expect(0).toBeFalsy()
     })
 
-    //Number matchers
+    //Number matchers.
+
     test("numeric operations", () => {
 
         var num1 = 100;
